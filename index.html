@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+    <head>
+      <meta charset="utf-8">
+      <link rel="stylesheet" type="text/css" href="_css/style.css">
+    </head>
+    <body>
+      <article id='calculator'>
+        <div class="row">
+          <div id="calc-history-val_Outer">
+            <div id="calc-history-val_Inner"></div>
+          </div>
+          <div id="calc-display-val"></div>
+        </div>
+        <div class="row">
+          <div class="calc-btn-tool" id="calc-clear">C</div>
+          <div class="calc-btn-tool" id="calc-clear-entry">CE</div>
+          <div class="calc-btn-tool" id="calc-backspace">&#9003;</div>
+          <div class="calc-btn-operator" id="calc-divide">&#247;</div>
+        </div>
+        <div class="row">
+          <div class="calc-btn-num" id="calc-seven">7</div>
+          <div class="calc-btn-num" id="calc-eight">8</div>
+          <div class="calc-btn-num" id="calc-nine">9</div>
+          <div class="calc-btn-operator" id="calc-multiply">&#215;</div>
+        </div>
+        <div class="row">
+          <div class="calc-btn-num" id="calc-four">4</div>
+          <div class="calc-btn-num" id="calc-five">5</div>
+          <div class="calc-btn-num" id="calc-six">6</div>
+          <div class="calc-btn-operator" id="calc-minus">&#8722;</div>
+        </div>
+        <div class="row">
+          <div class="calc-btn-num" id="calc-one">1</div>
+          <div class="calc-btn-num" id="calc-two">2</div>
+          <div class="calc-btn-num" id="calc-three">3</div>
+          <div class="calc-btn-operator" id="calc-plus">&#43;</div>
+        </div>
+        <div class="row">
+          <div class="calc-btn-operator" id="calc-negate">&#177;</div>
+          <div class="calc-btn-num" id="calc-zero">0</div>
+          <div class="calc-btn-tool" id="calc-decimal">.</div>
+          <div class="calc-btn-operator" id="calc-equals">=</div>
+        </div>
+      </article>
+      <!-- Empty Node Removal -->
+      <script>
+        function clean(node) {
+          for (var n = 0; n < node.childNodes.length; n ++) {
+            var child = node.childNodes[n];
+            if (child.nodeType === 8 || (child.nodeType === 3 && !/\S/.test(child.nodeValue))) {
+              node.removeChild(child);
+              n --;
+            } else if(child.nodeType === 1) {
+              clean(child);
+            }
+          }
+        }
+        clean(document);
+      </script>
+      <script>
+        var oneBtn = document.getElementById('calc-one');
+        var twoBtn = document.getElementById('calc-two');
+        var threeBtn = document.getElementById('calc-three');
+        var fourBtn = document.getElementById('calc-four');
+        var fiveBtn = document.getElementById('calc-five');
+        var sixBtn = document.getElementById('calc-six');
+        var sevenBtn = document.getElementById('calc-seven');
+        var eightBtn = document.getElementById('calc-eight');
+        var nineBtn = document.getElementById('calc-nine');
+        var zeroBtn = document.getElementById('calc-zero');
+
+        var decimalBtn = document.getElementById('calc-decimal');
+        var clearBtn = document.getElementById('calc-clear');
+        var clearEntryBtn = document.getElementById('calc-clear-entry');
+        var equalsBtn = document.getElementById('calc-equals');
+        var plusBtn = document.getElementById('calc-plus');
+        var minusBtn = document.getElementById('calc-minus');
+        var divideBtn = document.getElementById('calc-dicide');
+        var multiplyBtn = document.getElementById('calc-multiply');
+        var backspaceBtn = document.getElementById('calc-backspace');
+
+        var displayValElement = document.getElementById('calc-display-val');
+        var historyValElement = document.getElementById('calc-history-val_Inner');
+
+        var calcNumBtns = document.getElementsByClassName("calc-btn-num");
+        var calcOperatorBtns = document.getElementsByClassName("calc-btn-operator");
+
+        var displayVal = '';
+        var pendingVal;
+        var historyVal;
+        var evalStringArray = [];
+        var clearOnNextClick = true;
+
+        var updateDisplayVal = (clickObj) => {
+          if (clearOnNextClick) {
+            clearBtn.click();
+            clearOnNextClick = false;
+          }
+          let btnText = clickObj.target.innerText;
+          displayVal += btnText;
+          displayValElement.innerHTML = displayVal;
+        };
+        var performOperation = (clickObj) => {
+          let operation = clickObj.target.innerText;
+          clearOnNextClick = false;
+
+          switch (operation) {
+              case '+':
+                pendingVal = Number.parseFloat(displayVal);
+                displayVal = '';
+                displayValElement.innerHTML = displayVal;
+                evalStringArray.push(pendingVal);
+                historyVal += pendingVal + '+';
+                historyValElement.innerHTML = historyVal;
+
+                evalStringArray.push('+');
+                break;
+              case '−':
+                pendingVal = Number.parseFloat(displayVal);
+                displayVal = '';
+                displayValElement.innerHTML = displayVal;
+                evalStringArray.push(pendingVal);
+                historyVal += pendingVal + '-';
+                historyValElement.innerHTML = historyVal;
+
+                evalStringArray.push('-');
+                break;
+              case '×':
+                pendingVal = Number.parseFloat(displayVal);
+                displayVal = '';
+                displayValElement.innerHTML = displayVal;
+                evalStringArray.push(pendingVal);
+                historyVal += pendingVal + '×';
+                historyValElement.innerHTML = historyVal;
+
+                evalStringArray.push('*');
+                break;
+              case '÷':
+                pendingVal = Number.parseFloat(displayVal);
+                displayVal = '';
+                displayValElement.innerHTML = displayVal;
+                evalStringArray.push(pendingVal);
+                historyVal += pendingVal + '÷';
+                historyValElement.innerHTML = historyVal;
+
+                evalStringArray.push('/');
+                break;
+              case '±':
+                let lengthOfDisplayVal = displayVal.length;
+
+                if (displayVal.slice(0,1) === '-')
+                  displayVal = displayVal.slice(1, lengthOfDisplayVal);
+                else
+                  displayVal = '-' + displayVal;
+
+                displayValElement.innerHTML = displayVal;
+                break;
+              case '=':
+                pendingVal = Number.parseFloat(displayVal);
+                evalStringArray.push(pendingVal);
+
+                historyVal += pendingVal + '=';
+                historyValElement.innerHTML = historyVal;
+
+                let evaluation = eval(evalStringArray.join(' '));
+                displayValElement.innerHTML = evaluation;
+
+                //console.log('Opperation =', evalStringArray, displayVal);
+
+                clearOnNextClick = true;
+                evalStringArray = [];
+                displayVal = evaluation;
+                pendingVal = undefined;
+                break;
+
+              default:
+                //console.log('DEFAULT');
+                console.log('Something Broke, Sorry...\n Please Let me know \n Bradley Rounds')
+                break;
+          }
+          /*
+          console.log('Opperation Done:');
+          console.log('  pendingVal', pendingVal);
+          console.log('  historyVal', historyVal);
+          console.log('  displayVal', displayVal);
+          console.log('  evalStringArray', evalStringArray);
+          */
+        };
+
+        for (var i = 0; i < calcNumBtns.length; i++)
+          calcNumBtns[i].addEventListener('click', updateDisplayVal, false);
+        for (var i = 0; i < calcOperatorBtns.length; i++)
+          calcOperatorBtns[i].addEventListener('click', performOperation, false);
+
+        clearBtn.onclick = () => {
+          displayVal = '';
+          historyVal = '';
+          pendingVal = undefined;
+          displayValElement.innerHTML = displayVal;
+          historyValElement.innerHTML = historyVal;
+          evalStringArray = [];
+        };
+        clearEntryBtn.onclick = () => {
+          displayVal = '';
+          displayValElement.innerHTML = displayVal;
+        };
+        backspaceBtn.onclick = () => {
+          let lengthOfDisplayVal = displayVal.length;
+          displayVal = displayVal.slice(0, lengthOfDisplayVal - 1);
+          displayValElement.innerHTML = displayVal;
+        };
+        decimalBtn.onclick = () => {
+          displayVal += '.';
+          displayValElement.innerHTML = displayVal;
+        };
+    </script>
+  </body>
+</html>
