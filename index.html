@@ -37,7 +37,7 @@
           <div class="calc-btn-operator" id="calc-plus">&#43;</div>
         </div>
         <div class="row">
-          <div class="calc-btn-operator" id="calc-negate">&#177;</div>
+          <div class="calc-btn-tool" id="calc-negate">&#177;</div>
           <div class="calc-btn-num" id="calc-zero">0</div>
           <div class="calc-btn-tool" id="calc-decimal">.</div>
           <div class="calc-btn-operator" id="calc-equals">=</div>
@@ -59,31 +59,32 @@
         clean(document);
       </script>
       <script>
-        var oneBtn = document.getElementById('calc-one');
-        var twoBtn = document.getElementById('calc-two');
+        var oneBtn   = document.getElementById('calc-one');
+        var twoBtn   = document.getElementById('calc-two');
         var threeBtn = document.getElementById('calc-three');
-        var fourBtn = document.getElementById('calc-four');
-        var fiveBtn = document.getElementById('calc-five');
-        var sixBtn = document.getElementById('calc-six');
+        var fourBtn  = document.getElementById('calc-four');
+        var fiveBtn  = document.getElementById('calc-five');
+        var sixBtn   = document.getElementById('calc-six');
         var sevenBtn = document.getElementById('calc-seven');
         var eightBtn = document.getElementById('calc-eight');
-        var nineBtn = document.getElementById('calc-nine');
-        var zeroBtn = document.getElementById('calc-zero');
+        var nineBtn  = document.getElementById('calc-nine');
+        var zeroBtn  = document.getElementById('calc-zero');
 
-        var decimalBtn = document.getElementById('calc-decimal');
-        var clearBtn = document.getElementById('calc-clear');
+        var decimalBtn    = document.getElementById('calc-decimal');
+        var clearBtn      = document.getElementById('calc-clear');
         var clearEntryBtn = document.getElementById('calc-clear-entry');
-        var equalsBtn = document.getElementById('calc-equals');
-        var plusBtn = document.getElementById('calc-plus');
-        var minusBtn = document.getElementById('calc-minus');
-        var divideBtn = document.getElementById('calc-dicide');
-        var multiplyBtn = document.getElementById('calc-multiply');
-        var backspaceBtn = document.getElementById('calc-backspace');
+        var equalsBtn     = document.getElementById('calc-equals');
+        var plusBtn       = document.getElementById('calc-plus');
+        var minusBtn      = document.getElementById('calc-minus');
+        var divideBtn     = document.getElementById('calc-dicide');
+        var multiplyBtn   = document.getElementById('calc-multiply');
+        var negateBtn     = document.getElementById('calc-negate');
+        var backspaceBtn  = document.getElementById('calc-backspace');
 
         var displayValElement = document.getElementById('calc-display-val');
         var historyValElement = document.getElementById('calc-history-val_Inner');
 
-        var calcNumBtns = document.getElementsByClassName("calc-btn-num");
+        var calcNumBtns      = document.getElementsByClassName("calc-btn-num");
         var calcOperatorBtns = document.getElementsByClassName("calc-btn-operator");
 
         var displayVal = '';
@@ -146,16 +147,6 @@
 
                 evalStringArray.push('/');
                 break;
-              case '±':
-                let lengthOfDisplayVal = displayVal.length;
-
-                if (displayVal.slice(0,1) === '-')
-                  displayVal = displayVal.slice(1, lengthOfDisplayVal);
-                else
-                  displayVal = '-' + displayVal;
-
-                displayValElement.innerHTML = displayVal;
-                break;
               case '=':
                 pendingVal = Number.parseFloat(displayVal);
                 evalStringArray.push(pendingVal);
@@ -210,6 +201,14 @@
           displayVal = displayVal.slice(0, lengthOfDisplayVal - 1);
           displayValElement.innerHTML = displayVal;
         };
+        negateBtn.onclick = () => {
+          let lengthOfDisplayVal = displayVal.length;
+          if (displayVal.slice(0,1) === '-')
+            displayVal = displayVal.slice(1, lengthOfDisplayVal);
+          else
+            displayVal = '-' + displayVal;
+          displayValElement.innerHTML = displayVal;
+        }
         decimalBtn.onclick = () => {
           displayVal += '.';
           displayValElement.innerHTML = displayVal;

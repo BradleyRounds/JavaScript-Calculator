@@ -34,7 +34,6 @@ article div {
   display: inline-block;
 }
 .row div:hover {border-color: gray;}
-
 .row {
   display: block;
   text-align: center;
@@ -45,7 +44,6 @@ article div {
 .calc-btn-tool {font-size: .8em;}
 #calc-display-val {
   pointer-events: none;
-
   background-color: white;
   height: 100px;
   width: 99%;
